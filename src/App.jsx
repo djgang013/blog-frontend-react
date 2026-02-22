@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-
+import { AuthProvider } from "./context/AuthContext";
+import PrivateRoute from "./components/PrivateRoute";
+import Login from "./Login";
+import Home from "./Home";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 const API = "http://localhost:8080/api";
 
 function App() {
@@ -82,58 +86,21 @@ function App() {
   };
 
   return (
-    <div>
-      <div className="page-header">
-        <h1>My React Blog</h1>
-        <p>Share your thoughts with the world</p>
-      </div>
-
-      {/* ── Create Forms ── */}
-      <div className="forms-row">
-        <CreateUserForm createUser={createUser} />
-        <CreatePostForm users={users} createPost={createPost} />
-      </div>
-
-      <hr className="divider" />
-
-      {posts.length === 0 ? (
-        <div className="empty-state">
-          <div className="icon">📝</div>
-          <p>No posts yet. Create a user and write your first post!</p>
-        </div>
-      ) : (
-        posts.map(post => (
-          <div key={post.id} className="card post-card">
-            <h2>{post.title}</h2>
-            <p className="post-content">{post.content}</p>
-            <div className="post-meta">
-              <span className="avatar">
-                {post.user?.name?.charAt(0).toUpperCase() || "?"}
-              </span>
-              <span>{post.user?.name || "Unknown"}</span>
-            </div>
-
-            <div className="comments-section">
-              <h4>Comments ({post.comments?.length || 0})</h4>
-
-              {post.comments?.map(comment => (
-                <div key={comment.id} className="comment-item">
-                  <span>{comment.message}</span>
-                  <button
-                    onClick={() => deleteComment(comment.id, post.id)}
-                    className="btn btn-danger"
-                  >
-                    Delete
-                  </button>
-                </div>
-              ))}
-
-              <CommentForm postId={post.id} addComment={addComment} />
-            </div>
-          </div>
-        ))
-      )}
-    </div>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route
+            path="/"
+            element={
+              <PrivateRoute>
+                <Home posts={posts} users={users} createPost={createPost} addComment={addComment} deleteComment={deleteComment} />
+              </PrivateRoute>
+            }
+          />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 
