@@ -18,7 +18,7 @@ function Login() {
         password,
       });
 
-      login(response.data.token);
+      login(response.data);
       navigate("/");
     } catch (error) {
       alert("Invalid credentials");
@@ -26,21 +26,43 @@ function Login() {
   };
 
   return (
-    <div className="login-container">
-      <h2>Login</h2>
-      <form onSubmit={handleLogin}>
-        <input
-          type="email"
-          placeholder="Email"
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button type="submit">Login</button>
-      </form>
+    <div className="login-page">
+      <div className="login-card">
+        <div className="login-header">
+          <span className="login-icon">📝</span>
+          <h1>Blog</h1>
+          <p>Sign in to your account</p>
+        </div>
+        <form onSubmit={handleLogin} className="login-form">
+          <div className="form-group">
+            <label htmlFor="email">Email</label>
+            <input
+              id="email"
+              className="input"
+              type="email"
+              placeholder="you@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="password">Password</label>
+            <input
+              id="password"
+              className="input"
+              type="password"
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <button type="submit" className="btn btn-primary login-btn">
+            Sign In
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
